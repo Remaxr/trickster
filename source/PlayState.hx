@@ -41,6 +41,9 @@ import lime.utils.Assets;
 import openfl.display.BlendMode;
 import openfl.display.StageQuality;
 import openfl.filters.ShaderFilter;
+#if mobileC
+import ui.Mobilecontrols;
+#end
 
 using StringTools;
 
@@ -168,6 +171,10 @@ class PlayState extends MusicBeatState
 	public static var timeCurrentlyR:Float = 0;
 
 	public static var trans:FlxSprite;
+
+	#if mobileC
+	var mcontrols:Mobilecontrols; 
+	#end
 
 	override public function create()
 	{
@@ -1030,6 +1037,29 @@ class PlayState extends MusicBeatState
 		scoreTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
 
+		#if mobileC
+			mcontrols = new Mobilecontrols();
+			switch (mcontrols.mode)
+			{
+				case VIRTUALPAD_RIGHT | VIRTUALPAD_LEFT | VIRTUALPAD_CUSTOM:
+					controls.setVirtualPad(mcontrols._virtualPad, FULL, NONE);
+				case HITBOX:
+					controls.setHitBox(mcontrols._hitbox);
+				default:
+			}
+			trackedinputs = controls.trackedinputs;
+			controls.trackedinputs = [];
+
+			var camcontrol = new FlxCamera();
+			FlxG.cameras.add(camcontrol);
+			camcontrol.bgColor.alpha = 0;
+			mcontrols.cameras = [camcontrol];
+
+			mcontrols.visible = false;
+
+			add(mcontrols);
+		#end
+
 		// if (SONG.song == 'South')
 		// FlxG.camera.alpha = 0.7;
 		// UI_camera.zoom = 1;
@@ -1620,7 +1650,9 @@ class PlayState extends MusicBeatState
 			
 			trace(trans.animation.frames);
 
-			trans.setGraphicSize(Std.int(trans.width * 1.6));
+			trans.setGraphicSize(Std.int(trans.width * 1.6 * 2));
+
+			trans.screenCenter();
 
 			trans.scrollFactor.set();
 
@@ -1676,7 +1708,7 @@ class PlayState extends MusicBeatState
 
 			add(trans);
 
-			trans.animation.play("Close",false,false,18);
+			trans.animation.play("Close",false,false,7);
 			trans.animation.pause();
 
 			new FlxTimer().start(0.01, function(tmr:FlxTimer)
@@ -1688,7 +1720,7 @@ class PlayState extends MusicBeatState
 					}
 					else
 					{
-					if (wat && trans.animation.frameIndex == 18)
+					if (wat && trans.animation.frameIndex == 7)
 					{
 						trans.animation.resume();
 						trace('playing animation...');
@@ -1844,7 +1876,7 @@ class PlayState extends MusicBeatState
 				else
 				{
 					trace(trans.animation.frameIndex);
-					if (trans.animation.frameIndex == 30)
+					if (trans.animation.frameIndex == 14)
 						trans.alpha = 0;
 					tmr.reset(0.1);
 				}
@@ -1855,6 +1887,10 @@ class PlayState extends MusicBeatState
 
 	function startCountdown():Void
 	{
+		#if mobileC
+		mcontrols.visible = true;
+		#end
+
 		inCutscene = false;
 
 		generateStaticArrows(0);
@@ -2330,7 +2366,7 @@ class PlayState extends MusicBeatState
 
 		scoreTxt.text = Ratings.CalculateRanking(songScore,0,nps,accuracy);
 
-		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
+		if (FlxG.keys.justPressed.ENTER #if android || FlxG.android.justReleased.BACK #end && (startedCountdown && canPause))
 		{
 			persistentUpdate = false;
 			persistentDraw = true;
@@ -2727,12 +2763,9 @@ class PlayState extends MusicBeatState
 		canPause = false;
 		FlxG.sound.music.volume = 0;
 		vocals.volume = 0;
-		if (SONG.validScore)
-		{
 			#if !switch
 			Highscore.saveScore(SONG.song, songScore, storyDifficulty);
 			#end
-		}
 		
 
 		if (isStoryMode)
@@ -2748,7 +2781,7 @@ class PlayState extends MusicBeatState
 			{
 				MainMenuState.reRoll = true;
 
-				LoadingState.loadAndSwitchState(new VideoState("assets/videos/TricksterMan.webm",new MainMenuState()));
+				LoadingState.loadAndSwitchState(new VideoState("assets/videos/TricksterMan",new MainMenuState()));
 
 				if (storyDifficulty == 2)
 					FlxG.save.data.beatenHard = true;
@@ -2789,9 +2822,9 @@ class PlayState extends MusicBeatState
 				switch(song.toLowerCase())
 				{
 					case 'improbable-outset':
-						LoadingState.loadAndSwitchState(new VideoState("assets/videos/HankFuckingShootsTricky.webm", new PlayState()));
+						LoadingState.loadAndSwitchState(new VideoState("assets/videos/HankFuckingShootsTricky", new PlayState()));
 					case 'madness':
-						LoadingState.loadAndSwitchState(new VideoState("assets/videos/HELLCLOWN_ENGADGED.webm",new PlayState()));
+						LoadingState.loadAndSwitchState(new VideoState("assets/videos/HELLCLOWN_ENGADGED",new PlayState()));
 					default:
 						LoadingState.loadAndSwitchState(new PlayState());
 				}

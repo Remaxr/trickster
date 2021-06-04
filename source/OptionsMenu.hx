@@ -42,7 +42,13 @@ class OptionsMenu extends MusicBeatState
 		
 		new OptionCatagory("Misc", [
 			new FPSOption("Toggle the FPS Counter")
+		]),
+
+		new OptionCatagory("Mobile settings", [
+			new CustomControls("edit a control"),
+			new About("about android port")
 		])
+
 		
 	];
 
@@ -104,6 +110,10 @@ class OptionsMenu extends MusicBeatState
 		menuShade.setGraphicSize(Std.int(menuShade.width * 0.7));
 		add(menuShade);
 
+		#if mobileC
+		addVirtualPad(UP_DOWN, A_B);
+		#end
+
 		super.create();
 	}
 
@@ -157,9 +167,9 @@ class OptionsMenu extends MusicBeatState
 				curSelected = 0;
 				currentOptions[curSelected].color = FlxColor.WHITE;
 			}
-			if (FlxG.keys.justPressed.UP)
+			if (controls.UP_R)
 				changeSelection(-1);
-			if (FlxG.keys.justPressed.DOWN)
+			if (controls.DOWN_R)
 				changeSelection(1);
 			
 			if (isCat)

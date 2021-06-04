@@ -198,26 +198,38 @@ class Character extends FlxSprite
 				playAnim('idle');
 				
 			case 'trickyH':
-				tex = CachedFrames.cachedInstance.fromSparrow('idle','hellclwn/Tricky/Idle');
+				//tex = CachedFrames.cachedInstance.fromSparrow('idle','hellclwn/Tricky/Idle');
+				tex = Paths.getSparrowAtlas('hellclwn/Tricky/Idle', 'clown');
 
 				frames = tex;
 
 				graphic.persist = true;
 				graphic.destroyOnNoUse = false;
 
-				animation.addByPrefix('idle','Phase 3 Tricky Idle', 24);
-				
+				animation.addByPrefix('idle','Phase 3 Tricky Idle', 12);
+		
 				// they have to be left right up down, in that order.
 				// cuz im too lazy to dynamicly get these names
 				// cry about it
 
 				otherFrames = new Array<Character>();
 
-				
-				otherFrames.push(new Character(100, 100, 'trickyHLeft'));
-				otherFrames.push(new Character(100, 100, 'trickyHRight'));
-				otherFrames.push(new Character(100, 100, 'trickyHUp'));
-				otherFrames.push(new Character(100, 100, 'trickyHDown'));
+				var left = new Character(100, 100, 'trickyHLeft');
+				left.addOffset("idle", -300, -1200);
+
+				var right = new Character(100, 100, 'trickyHRight');
+				right.addOffset("idle", -300, -1200);
+
+				var up = new Character(100, 100, 'trickyHUp');
+				up.addOffset("idle", -300, -1200);
+
+				var down = new Character(100, 100, 'trickyHDown');
+				down.addOffset("idle", -300, -1200);
+
+				otherFrames.push(left);
+				otherFrames.push(right);
+				otherFrames.push(up);
+				otherFrames.push(down);
 
 				animations.push(animation);
 				for (i in otherFrames)
@@ -226,9 +238,19 @@ class Character extends FlxSprite
 				trace('poggers');
 
 				addOffset("idle", 325, 0);
+				
+				addOffset("idle", -300, -1200);
+
+				setGraphicSize(Std.int(width * 4));
+				//width *= 4;
+				//height *= 4;
+				updateHitbox();
+
+
 				playAnim('idle');
 			case 'trickyHDown':
-				tex = CachedFrames.cachedInstance.fromSparrow('down','hellclwn/Tricky/Down');
+				//tex = CachedFrames.cachedInstance.fromSparrow('down','hellclwn/Tricky/Down');
+				tex = Paths.getSparrowAtlas('hellclwn/Tricky/Down', 'clown');
 
 				frames = tex;
 
@@ -239,13 +261,16 @@ class Character extends FlxSprite
 
 				addOffset("idle",475, -450);
 
+				setGraphicSize(Std.int(width * 4));
+				updateHitbox();
+
 				y -= 2000;
 				x -= 1400;
 
 				playAnim('idle');
 			case 'trickyHUp':
-				tex = CachedFrames.cachedInstance.fromSparrow('up','hellclwn/Tricky/Up');
-
+				//tex = CachedFrames.cachedInstance.fromSparrow('up','hellclwn/Tricky/Up');
+				tex = Paths.getSparrowAtlas('hellclwn/Tricky/Up', 'clown');
 
 				frames = tex;
 
@@ -256,12 +281,16 @@ class Character extends FlxSprite
 
 				addOffset("idle", 575, -450);
 
+				setGraphicSize(Std.int(width * 4));
+				updateHitbox();
+
 				y -= 2000;
 				x -= 1400;
 
 				playAnim('idle');
 			case 'trickyHRight':
-				tex = CachedFrames.cachedInstance.fromSparrow('right','hellclwn/Tricky/right');
+				//tex = CachedFrames.cachedInstance.fromSparrow('right','hellclwn/Tricky/right');
+				tex = Paths.getSparrowAtlas('hellclwn/Tricky/right', 'clown');
 
 				frames = tex;
 
@@ -272,12 +301,16 @@ class Character extends FlxSprite
 
 				addOffset("idle",485, -300);
 
+				setGraphicSize(Std.int(width * 4));
+				updateHitbox();
+
 				y -= 2000;
 				x -= 1400;
 
 				playAnim('idle');
 			case 'trickyHLeft':
-				tex = CachedFrames.cachedInstance.fromSparrow('left','hellclwn/Tricky/Left');
+				//tex = CachedFrames.cachedInstance.fromSparrow('left','hellclwn/Tricky/Left');
+				tex = Paths.getSparrowAtlas('hellclwn/Tricky/Left', 'clown');
 
 				frames = tex;
 
@@ -287,6 +320,9 @@ class Character extends FlxSprite
 				animation.addByPrefix('idle','Proper Left', 24);
 
 				addOffset("idle", 516, 25);
+
+				setGraphicSize(Std.int(width * 4));
+				updateHitbox();
 
 				y -= 2000;
 				x -= 1400;
